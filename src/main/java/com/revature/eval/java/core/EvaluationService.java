@@ -30,8 +30,15 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String s = "";
+		phrase = phrase.replaceAll("-", " ");
+		phrase = phrase.replaceAll("\\s+", " ").trim();
+		String[] s2 = phrase.split(" ");
+
+		for (int i = 0; i < s2.length; i++)
+			s += s2[i].charAt(0);
+
+		return s.toUpperCase();
 	}
 
 	/**
@@ -84,18 +91,24 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne != sideTwo || sideOne != sideThree || sideTwo != sideThree)
+				return false;
+			else
+				return true;
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree)
+				return true;
+			else
+				return false;
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if (sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree)
+				return false;
+			else
+				return true;	
 		}
 
 	}
@@ -116,8 +129,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		string = string.toLowerCase();
+		int point = 0;
+		int[] table = {
+				// a  b  c  d  e  f
+				   1, 3, 3, 2, 1, 4,
+				// g  h  i  j  k  l
+				   2, 4, 1, 8, 5, 1,
+				// m  n  o  p  q   r
+				   3, 1, 1, 3, 10, 1,
+				// s  t  u  v  w  x  y  z
+				   1, 1, 1, 4, 4, 8, 4, 10 };
+
+		for (int i = 0; i < string.length(); i++) {
+			point += table[string.charAt(i) - 97];
+		}
+		return point;
+
 	}
 
 	/**
@@ -152,8 +180,10 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		string = string.replaceAll("\\D", "");		
+		if (string.length() != 10)
+			throw new IllegalArgumentException();
+		return string;
 	}
 
 	/**
@@ -166,8 +196,35 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		Map<String, Integer> count = new HashMap<String, Integer>();
+
+		// clear white spaces where more than two spaces
+		string = string.replaceAll("\\s+", " ").trim();
+
+		// add the string into an array of string
+		String[] s = string.split(" ");
+
+		// add the string array into the list
+		List<String> l1 = new ArrayList<String>();
+		for (int i = 0; i < s.length; i++) {
+			l1.add(s[i]);
+		}
+
+		while (!l1.isEmpty()) {
+			count.put(l1.get(0), 1);
+			int currentCount = 1;
+
+			for (int t = 1; t < l1.size(); t++) {
+				if (l1.get(0).equals(l1.get(t))) {
+					currentCount += 1;
+					count.replace(l1.get(0), currentCount);
+					l1.remove(t);
+				}
+			}
+			l1.remove(0);
+		}
+		return count;
+
 	}
 
 	/**
@@ -320,8 +377,25 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			char[] c = new char[string.length()];
+			int ascii = 0;
+			for (int i = 0; i < string.length(); i++) {
+				if (string.charAt(i) >= 'a' && string.charAt(i) <= 'z') {
+					ascii = string.charAt(i) + key;
+					if (ascii > 122)
+						ascii = (ascii - 122) + 96;
+				} else if (string.charAt(i) >= 'A' && string.charAt(i) <= 'Z') {
+					ascii = string.charAt(i) + key;
+					if (ascii > 90)
+						ascii = (ascii - 90) + 64;
+				} else {
+					ascii = (int) string.charAt(i);
+				}
+
+				c[i] = (char) ascii;
+			}
+			return new String(c);
+
 		}
 
 	}
@@ -339,8 +413,35 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		int prime = 0;
+		int number = 3;
+		int count = 1;
+		if (i <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (i == 1)
+			prime = 2;
+		else if (i == 2)
+			prime = 3;
+		else {
+			while (count < i) {
+				number += 2;
+				int div = 0;
+				for (int j = 2; j <= (int) Math.sqrt(number); j++) {
+					if (number % j == 0) {
+						div = 1;
+						break;
+					}
+				}
+				if (div == 0) {
+					count++;
+					prime = number;
+				}
+			}
+		}
+		return prime;
+
 	}
 
 	/**
@@ -376,8 +477,29 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string = string.toLowerCase().replaceAll("\\W", "");
+			List<Character> lc = new ArrayList<Character>();
+
+			int count = 0;
+			for (int i = 0; i < string.length(); i++) {
+				if (string.charAt(i) >= 'a' && string.charAt(i) <= 'z') {
+					lc.add((char) (122 - (string.charAt(i) - 97)));
+					count += 1;
+				} else if (string.charAt(i) >= '0' && string.charAt(i) <= '9') {
+					lc.add(string.charAt(i));
+					count += 1;
+				}
+				if (count % 5 == 0) {
+					lc.add(' ');
+				}
+			}
+			char[] c = new char[lc.size()];
+			for (int j = 0; j < c.length; j++) {
+				c[j] = lc.get(j);
+			}
+			return new String(c);
+
+
 		}
 
 		/**
@@ -387,8 +509,22 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string = string.toLowerCase().replaceAll("\\W", "");
+			List<Character> lc = new ArrayList<Character>();
+
+			for (int i = 0; i < string.length(); i++) {
+				if (string.charAt(i) >= 'a' && string.charAt(i) <= 'z')
+					lc.add((char) (122 - (string.charAt(i) - 97)));
+				else if (string.charAt(i) >= '0' && string.charAt(i) <= '9')
+					lc.add(string.charAt(i));
+			}
+
+			char[] c = new char[lc.size()];
+			for (int j = 0; j < c.length; j++) {
+				c[j] = lc.get(j);
+			}
+			return new String(c);
+
 		}
 	}
 
